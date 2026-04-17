@@ -17,6 +17,9 @@ h1 {
   </head>
   <body>
 <div id="container"></div>
+<div id="container"></div>
+<div id="container"></div>
+<div id="container"></div>
 <script type="module">
     import { ThreeDAxes, ThreeDScene, Surface3D, RED_D, RED_E } from "https://cdn.jsdelivr.net/npm/manim-web@0.3.18/dist/manim-web.browser.js";
 
