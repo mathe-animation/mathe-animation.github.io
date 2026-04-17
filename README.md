@@ -3,6 +3,9 @@
     <link rel="stylesheet" href="styles.css">
     <title>This is the title of the webpage!</title>
     <style>
+html {
+  background-color: black;
+}
 .container-lg {
   position: absolute;
   transparency: 100;
