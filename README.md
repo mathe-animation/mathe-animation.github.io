@@ -7,6 +7,9 @@
   position: absolute;
   transparency: 100;
 }
+h1 {
+  display: none;
+}
 </style>
   </head>
   <body>
