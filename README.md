@@ -8,7 +8,6 @@ html {
 }
 .container-lg {
   /*position: absolute;*/
-  display: none;
 }
 h1 {
   display: none;
@@ -16,9 +15,6 @@ h1 {
 </style>
   </head>
   <body>
-<div id="container"></div>
-<div id="container"></div>
-<div id="container"></div>
 <div id="container"></div>
 <script type="module">
     import { ThreeDAxes, ThreeDScene, Surface3D, RED_D, RED_E } from "https://cdn.jsdelivr.net/npm/manim-web@0.3.18/dist/manim-web.browser.js";
