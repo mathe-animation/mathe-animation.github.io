@@ -7,7 +7,7 @@ html {
   background-color: black;
 }
 .container-lg {
-  position: absolute;
+  /*position: absolute;*/
   display: none;
 }
 h1 {
