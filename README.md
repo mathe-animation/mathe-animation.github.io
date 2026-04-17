@@ -8,7 +8,7 @@ html {
 }
 .container-lg {
   position: absolute;
-  transparency: 100;
+  display: none;
 }
 h1 {
   display: none;
