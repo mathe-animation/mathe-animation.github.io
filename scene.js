@@ -65,9 +65,12 @@ const vir_blue = "#31688e";
 const container_width = document.getElementById("wrapper").offsetWidth;
 const container_height = container_width*0.75;
 
-window.onresize = function(event)
-{
-    document.location.reload(true);
+let inn_width = window.innerWidth;
+window.onresize = function(event) {
+    const new_inn_width = window.innerWidth;
+    if (inn_width != new_inn_width) {
+        document.location.reload(true);
+    }
 }
 
 console.log(container_width);
