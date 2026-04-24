@@ -269,14 +269,6 @@ export async function bouncingBall(scene) {
       rateFunc: rateFunctions[6].rateFunc,
   }));
   await scene.play(new AnimationGroup(animations));
-  for (let i = 0; i < row_count; i++) {
-    scene.remove(dot);
-  }
-  const animations_back = dots.map((dot, i) => new Shift(dot, {
-      direction: -1*shiftDirection,
-      duration: 1,
-      rateFunc: rateFunctions[6].rateFunc,
-  }));
 }
 
 //while (true) {
