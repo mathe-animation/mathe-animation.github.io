@@ -283,9 +283,3 @@ export async function bouncingBall(scene) {
 bouncingBall(scene);
 await scene.wait(1);
 //}
-
-// Create and animate a circle
-const circle = new Circle({ radius: 1.5 });
-await scene.play(new Create(circle));
-await scene.wait(1);
-await scene.play(new FadeOut(circle));
