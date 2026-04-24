@@ -62,9 +62,18 @@ const y_pos_calc = -0.6;
 const vir_yellow = "#fde725";
 const vir_blue = "#31688e";
 
+const container_width = document.getElementById("wrapper").offsetWidth;
+const container_height = container_width*0.75;
+
+window.onresize = function(event)
+{
+    document.location.reload(true);
+}
+
+console.log(container_width);
 const scene = new Scene(document.getElementById('container'), {
-    width: window.innerWidth,
-    height: window.innerWidth/1.33,
+    width: container_width,
+    height: container_height,
     backgroundColor: BLACK,
 });
 //Titel

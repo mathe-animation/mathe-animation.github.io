@@ -14,8 +14,8 @@ body {
     padding: 0;
 }*/
 
-#container {
-  max-width: fit-content;
+#wrapper {
+  max-width: 1364px;
   margin-left: auto;
   margin-right: auto;
 }
