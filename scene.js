@@ -279,10 +279,10 @@ export async function bouncingBall(scene) {
   }));
 }
 
-while (true) {
-  bouncingBall(scene);
-  await scene.wait(1);
-}
+//while (true) {
+bouncingBall(scene);
+await scene.wait(1);
+//}
 
 // Create and animate a circle
 const circle = new Circle({ radius: 1.5 });
