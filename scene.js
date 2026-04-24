@@ -63,8 +63,8 @@ const vir_yellow = "#fde725";
 const vir_blue = "#31688e";
 
 const scene = new Scene(document.getElementById('container'), {
-    width: 1024,
-    height: 768,
+    width: window.innerWidth,
+    height: window.innerWidth/1.33,
     backgroundColor: BLACK,
 });
 //Titel
