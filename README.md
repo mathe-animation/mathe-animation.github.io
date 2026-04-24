@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="ISO-8859-1">
+    <link rel="stylesheet" href="styles.css">
+    <title>This is the title of the webpage!</title>
+  </head>
+  <body>
+<div id="container"></div>
+<script>
+
+import {
+  AnimationGroup,
+  smooth,
+  easeInOutSine,
+  easeInOutBack,
+  easeOutElastic,
+  easeOutBounce,
+  easeInOutCirc,
+  smoothstep,
+  easeInOutExpo,
+  Scene,
+  Square,
+  Rectangle,
+  Circle,
+  Shift,
+  MoveToTarget,
+  MoveAlongPath,
+  GrowFromCenter,
+  LaggedStart,
+  Scale,
+  Rotate,
+  Rotating,
+  BLUE,
+  ORANGE,
+  LEFT,
+  BLACK,
+  WHITE,
+  GREEN,
+  TEAL_E,
+  MathTex,
+  Text,
+  Create,
+  FadeOut,
+  makeDraggable,
+  Dot,
+  RIGHT,
+  UL,
+  UP,
+  SVGMobject,
+  scaleVec,
+  subVec,
+  Line,
+  linear,
+  VGroup,
+  ORIGIN,
+  RED,
+  DL,
+  DOWN,
+  DashedLine,
+} from "https://cdn.jsdelivr.net/npm/manim-web@0.3.18/dist/manim-web.browser.js";
+
+//Vom Benutzer festgelegte Variablen des Experiments
+var k = 6;
+var n = 49;
+var number_exper = 100000;
+
+//Legt Taschenrechner Position fest, beeinflusst aber zusätzlich Position der "6 Richtige" Box und der Verbindungslinien von der LOTTO Ziehmaschine zum Taschenrechenr zur "6 Richtige" Box
+const x_pos_calc = 3;
+const y_pos_calc = -0.6;
+
+//VIRIDIS Farben
+const vir_yellow = "#fde725";
+const vir_blue = "#31688e";
+
+const scene = new Scene(document.getElementById('container'), {
+    width: 1024,
+    height: 768,
+    backgroundColor: BLACK,
+});
+//Titel
+const label_title = new Text({ text: 'LOTTO: 6 aus 49', fontSize: 70, color: '#fde725' });
+label_title.moveTo([2.5, 3.4, 0]);
+scene.add(label_title);
+
+//Simulation Status
+const label_sim_status = new Text({ text: 'Status: Simulation läuft...', fontSize: 20, color: '#fde725' });
+label_sim_status.moveTo([3.3, 0.88, 0]);
+scene.add(label_sim_status);
+
+//Simulation starten Button
+const label_sim_start = new Text({ text: 'Simulation starten', fontSize: 24, color: '#ffffff' });
+label_sim_start.moveTo([3.65, 1.36, 0]);
+scene.add(label_sim_start);
+const sim_start_button = new Rectangle({ width: 3, height: 0.6, color: '#35b779', fillOpacity: 0.5 });
+sim_start_button.moveTo([3.65, 1.4, 0]);
+scene.add(sim_start_button);
+//Simulation neustarten Button
+const label_sim_restart = new Text({ text: 'Neustart', fontSize: 24, color: '#ffffff' });
+label_sim_restart.moveTo([0.8, 1.36, 0]);
+scene.add(label_sim_restart);
+const sim_restart_button = new Rectangle({ width: 2.4, height: 0.6, color: '#440154', fillOpacity: 0.5 });
+sim_restart_button.moveTo([0.8, 1.4, 0]);
+scene.add(sim_restart_button);
+
+//3 Slider
+//k: Anzahl gezogene Kugeln Slider
+const k_slider_frame = new Rectangle({ width: 2.1, height: 0.05, color: '#fde725', fillOpacity: 0.5 });
+k_slider_frame.moveTo([3, 2.8, 0]);
+scene.add(k_slider_frame);
+//const k_slider = new ({ width: 0.1, height: 0.3, color: '#35b779', fillOpacity: 0.5 });
+const k_slider = new Square({ sideLength: 0.8, color: GREEN, fillOpacity: 0.8 });
+k_slider.moveTo([3, 2.8, 0]);
+scene.add(k_slider);
+makeDraggable(k_slider, scene, { constrainY: [2.8, 2.8], snapToGrid: 0.5 });
+const k_curr_value = new Rectangle({ width: 1, height: 0.3, color: '#31688e', fillOpacity: 0.5 });
+k_curr_value.moveTo([4.65, 2.8, 0]);
+scene.add(k_curr_value);
+const label_k_curr_value = new Text({ text: '6', fontSize: 24, color: '#ffffff' });
+label_k_curr_value.moveTo([4.65, 2.77, 0]);
+scene.add(label_k_curr_value);
+const label_label_k_curr_value = new Text({ text: 'k: Anzahl gezogene Kugeln', fontSize: 24, color: '#fde725' });
+label_label_k_curr_value.moveTo([0.4, 2.77, 0]);
+scene.add(label_label_k_curr_value);
+//n: Anzahl gezogene Kugeln Slider
+const n_slider_frame = new Rectangle({ width: 2.1, height: 0.05, color: '#fde725', fillOpacity: 0.5 });
+n_slider_frame.moveTo([3, 2.4, 0]);
+scene.add(n_slider_frame);
+const n_slider = new Rectangle({ width: 0.1, height: 0.3, color: '#35b779', fillOpacity: 0.5 });
+n_slider.moveTo([3, 2.4, 0]);
+scene.add(n_slider);
+makeDraggable(n_slider, scene, { constrainY: [2.4, 2.4] });
+const n_curr_value = new Rectangle({ width: 1, height: 0.3, color: '#31688e', fillOpacity: 0.5 });
+n_curr_value.moveTo([4.65, 2.4, 0]);
+scene.add(n_curr_value);
+const label_n_curr_value = new Text({ text: '6', fontSize: 24, color: '#ffffff' });
+label_n_curr_value.moveTo([4.65, 2.37, 0]);
+scene.add(label_n_curr_value);
+const label_label_n_curr_value = new Text({ text: 'n: Anzahl Kugeln insgesamt', fontSize: 24, color: '#fde725' });
+label_label_n_curr_value.moveTo([0.4, 2.37, 0]);
+scene.add(label_label_n_curr_value);
+//Anzahl der Versuche
+const v_slider_frame = new Rectangle({ width: 2.1, height: 0.05, color: '#fde725', fillOpacity: 0.5 });
+v_slider_frame.moveTo([3, 2.0, 0]);
+scene.add(v_slider_frame);
+const v_slider = new Rectangle({ width: 0.1, height: 0.3, color: '#35b779', fillOpacity: 0.5 });
+v_slider.moveTo([3, 2.0, 0]);
+scene.add(v_slider);
+makeDraggable(v_slider, scene, { constrainY: [2.0, 2.0] });
+const v_curr_value = new Rectangle({ width: 1, height: 0.3, color: '#31688e', fillOpacity: 0.5 });
+v_curr_value.moveTo([4.65, 2.0, 0]);
+scene.add(v_curr_value);
+const label_v_curr_value = new Text({ text: '6', fontSize: 24, color: '#ffffff' });
+label_v_curr_value.moveTo([4.65, 1.97, 0]);
+scene.add(label_v_curr_value);
+const label_label_v_curr_value = new Text({ text: 'Anzahl der Versuche', fontSize: 24, color: '#fde725' });
+label_label_v_curr_value.moveTo([0.4, 1.97, 0]);
+scene.add(label_label_v_curr_value);
+
+//LOTTO  Ziehung Animation
+const lotto_machine_radius = 1.7
+const wheel_border = new Circle({ radius: lotto_machine_radius, fillOpacity: 0.5, color: "#35b779" });
+//const wheel_border = new Square();
+wheel_border.moveTo([-3.3, y_pos_calc+1.1*lotto_machine_radius, 0]);
+scene.add(wheel_border);
+const marble_selection_frame = new Rectangle({ height: 0.6, width: 3.6, fillOpacity: 0.5, color: "#35b779" });
+marble_selection_frame.moveTo([-3.2, y_pos_calc, 0]);
+scene.add(marble_selection_frame);
+//await scene.play(new marble_selection_frame.Rotating());
+
+//Taschenrechner
+const calc_x = x_pos_calc;
+const calc_y = y_pos_calc;
+const calc_scale = 1;
+const operation_buttons_scale = 0.33;
+const shift_butt_x = 0.23
+const calc_color = "#31688e"
+const calc_button_text_color = "#ffffff"
+const calc_border = new Rectangle({ height: calc_scale*1.35, width: calc_scale*1, fillOpacity: 0.5, color: calc_color });
+calc_border.moveTo([calc_x, calc_y]);
+scene.add(calc_border);
+
+const calc_input = new Rectangle({ height: calc_scale*0.23, width: calc_scale*0.8, fillOpacity: 0.5, color: calc_color });
+calc_input.moveTo([calc_x, calc_y+0.4*calc_scale]);
+scene.add(calc_input);
+
+const loc_plus_button = [calc_x-shift_butt_x*calc_scale, calc_y+0.0*calc_scale];
+const loc_mult_button = [calc_x-shift_butt_x*calc_scale, calc_y-0.4*calc_scale];
+const loc_minus_button = [calc_x+shift_butt_x*calc_scale, calc_y+0.0*calc_scale];
+const loc_equals_button = [calc_x+shift_butt_x*calc_scale, calc_y-0.4*calc_scale];
+
+const calc_plus = new Rectangle({ height: calc_scale*operation_buttons_scale, width: calc_scale*operation_buttons_scale, fillOpacity: 0.5, color: calc_color });
+calc_plus.moveTo(loc_plus_button);
+scene.add(calc_plus);
+const calc_mult = new Rectangle({ height: calc_scale*operation_buttons_scale, width: calc_scale*operation_buttons_scale, fillOpacity: 0.5, color: calc_color });
+calc_mult.moveTo(loc_mult_button);
+scene.add(calc_mult);
+const calc_minus = new Rectangle({ height: calc_scale*operation_buttons_scale, width: calc_scale*operation_buttons_scale, fillOpacity: 0.5, color: calc_color });
+calc_minus.moveTo(loc_minus_button);
+scene.add(calc_minus);
+const calc_equals = new Rectangle({ height: calc_scale*operation_buttons_scale, width: calc_scale*operation_buttons_scale, fillOpacity: 0.5, color: calc_color });
+calc_equals.moveTo(loc_equals_button);
+scene.add(calc_equals);
+
+const label_calc_plus = new Text({ text: '+', fontSize: 24*calc_scale, color: calc_button_text_color });
+label_calc_plus.moveTo(loc_plus_button);
+scene.add(label_calc_plus);
+const label_calc_mult = new Text({ text: 'x', fontSize: 24*calc_scale, color: calc_button_text_color });
+label_calc_mult.moveTo(loc_mult_button);
+scene.add(label_calc_mult);
+const label_calc_minus = new Text({ text: '-', fontSize: 24*calc_scale, color: calc_button_text_color });
+label_calc_minus.moveTo(loc_minus_button);
+scene.add(label_calc_minus);
+const label_calc_equals = new Text({ text: '=', fontSize: 24*calc_scale, color: calc_button_text_color });
+label_calc_equals.moveTo(loc_equals_button);
+scene.add(label_calc_equals);
+
+//Counter wieviele Versuche schon simuliert wurden
+const x_pos_counter_exper = -3.8;
+const y_pos_counter_exper = -1.3;
+const counter_exper_color = vir_blue;
+
+const label_counter_exper = new Text({ text: 'Anzahl Versuche:', fontSize: 30, color: counter_exper_color });
+const counter_exper = new Text({ text: '82577', fontSize: 60, color: counter_exper_color });
+const von_text = new Text({ text: 'von', fontSize: 60, color: counter_exper_color });
+const label_number_exper = new Text({ text: number_exper.toString(), fontSize: 60, color: counter_exper_color });
+label_counter_exper.moveTo([x_pos_counter_exper, y_pos_counter_exper]);
+counter_exper.moveTo([x_pos_counter_exper-0.3, y_pos_counter_exper-0.5]);
+von_text.moveTo([x_pos_counter_exper+1.3, y_pos_counter_exper-0.5]);
+label_number_exper.moveTo([x_pos_counter_exper-0.05, y_pos_counter_exper-1.2]);
+scene.add(label_counter_exper, counter_exper, von_text, label_number_exper);
+
+//Anzeigetafel wieviele "6 Richtige"
+let count_6_richtige = 0;
+const label_count_6_richtige = new Text({ text: count_6_richtige.toString(), fontSize: 140, color: '#fde725' });
+label_count_6_richtige.moveTo([x_pos_calc, -3.07, 0]);
+scene.add(label_count_6_richtige);
+const count_6_richtige_frame = new Rectangle({ width: 3, height: 1.5, color: '#fde725', fillOpacity: 0.1 });
+count_6_richtige_frame.moveTo([x_pos_calc, -3.0, 0]);
+scene.add(count_6_richtige_frame);
+
+// Rate functions to compare, each with a label and color
+const rateFunctions = [
+    { name: 'smooth', rateFunc: smooth, color: vir_yellow },
+    { name: 'easeInOutSine', rateFunc: easeInOutSine, color: vir_yellow },
+    { name: 'easeInOutBack', rateFunc: easeInOutBack, color: vir_yellow },
+    { name: 'easeOutElastic', rateFunc: easeOutElastic, color: vir_yellow },
+    { name: 'easeOutBounce', rateFunc: easeOutBounce, color: vir_yellow },
+    { name: 'easeInOutCirc', rateFunc: easeInOutCirc, color: vir_yellow },
+    { name: 'smoothstep', rateFunc: smoothstep, color: vir_yellow },
+    { name: 'easeInOutExpo', rateFunc: easeInOutExpo, color: vir_yellow },
+];
+
+  const row_count = 6;
+  const points_top_y = y_pos_calc;
+  const points_start_x = -4.7;
+  const points_shift_x = 0.6;
+  const points_shift_dist = 5.0;
+  var dots = [];
+  const shiftDirection = scaleVec(points_shift_dist, RIGHT);
+
+export async function bouncingBall(scene) {
+  for (let i = 0; i < row_count; i++) {
+      const y = points_top_y;
+      const { name, color } = rateFunctions[7];
+
+      // Dot at the start position
+      const dot = new Dot({
+          point: [points_start_x+points_shift_x*i, y, 0],
+          radius: 0.26,
+          color: vir_yellow,
+          fillOpacity: 0.5
+      });
+      scene.add(dot);
+      dots.push(dot);
+  }
+  // Build simultaneous shift animations with different rate functions
+  const animations = dots.map((dot, i) => new Shift(dot, {
+      direction: shiftDirection,
+      duration: 0.5,
+      rateFunc: rateFunctions[6].rateFunc,
+  }));
+  await scene.play(new AnimationGroup(animations));
+  for (let i = 0; i < row_count; i++) {
+    scene.remove(dot);
+  }
+  const animations_back = dots.map((dot, i) => new Shift(dot, {
+      direction: -1*shiftDirection,
+      duration: 1,
+      rateFunc: rateFunctions[6].rateFunc,
+  }));
+}
+
+while (true) {
+  bouncingBall(scene);
+  await scene.wait(1);
+}
+
+// Create and animate a circle
+const circle = new Circle({ radius: 1.5 });
+await scene.play(new Create(circle));
+await scene.wait(1);
+await scene.play(new FadeOut(circle));
+  
+</script>
+</body>
+</html>
